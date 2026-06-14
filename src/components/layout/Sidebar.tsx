@@ -15,20 +15,33 @@ import {
   ChevronLeft,
   ChevronRight,
   Eye,
+  Gavel,
+  MessageSquare,
+  Shield,
 } from "lucide-react"
 import { useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 
 const navigation = [
-  { name: "Tableau de bord",   href: "/dashboard",      icon: LayoutDashboard },
-  { name: "Campagnes",         href: "/campagnes",      icon: Vote },
-  { name: "Interventions",     href: "/interventions",  icon: Mic2 },
-  { name: "Partis politiques", href: "/partis",         icon: Users },
-  { name: "Médias",            href: "/medias",         icon: Radio },
-  { name: "Alertes",           href: "/alertes",        icon: Bell },
-  { name: "Rapports",          href: "/rapports",       icon: FileText },
-  { name: "Vue publique",      href: "/public/observatoire", icon: Eye },
+  { name: "Tableau de bord",   href: "/dashboard",      icon: LayoutDashboard, group: "principal" },
+  { name: "Vue Directeur",     href: "/directeur",      icon: Shield,          group: "principal" },
+  { name: "Campagnes",         href: "/campagnes",      icon: Vote,            group: "monitoring" },
+  { name: "Interventions",     href: "/interventions",  icon: Mic2,            group: "monitoring" },
+  { name: "Partis politiques", href: "/partis",         icon: Users,           group: "monitoring" },
+  { name: "Médias",            href: "/medias",         icon: Radio,           group: "monitoring" },
+  { name: "Alertes",           href: "/alertes",        icon: Bell,            group: "regulation" },
+  { name: "Sanctions",         href: "/sanctions",      icon: Gavel,           group: "regulation" },
+  { name: "Signalements",      href: "/signalements",   icon: MessageSquare,   group: "regulation" },
+  { name: "Rapports",          href: "/rapports",       icon: FileText,        group: "regulation" },
+  { name: "Observatoire public", href: "/public/observatoire", icon: Eye,     group: "public" },
+]
+
+const groups = [
+  { key: "principal", label: "Principal" },
+  { key: "monitoring", label: "Monitoring" },
+  { key: "regulation", label: "Régulation" },
+  { key: "public", label: "Public" },
 ]
 
 export function Sidebar() {
@@ -71,24 +84,34 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-4 space-y-1 px-2">
-        {navigation.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
+      <nav className="flex-1 overflow-y-auto py-3 px-2">
+        {groups.map(group => {
+          const items = navigation.filter(n => n.group === group.key)
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              title={collapsed ? item.name : undefined}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                isActive
-                  ? "bg-white/20 text-white"
-                  : "text-blue-100 hover:bg-white/10 hover:text-white"
+            <div key={group.key} className="mb-3">
+              {!collapsed && (
+                <p className="text-[10px] font-bold text-blue-400 uppercase tracking-wider px-3 mb-1">{group.label}</p>
               )}
-            >
-              <item.icon className={cn("shrink-0", collapsed ? "w-5 h-5 mx-auto" : "w-4 h-4")} />
-              {!collapsed && <span>{item.name}</span>}
-            </Link>
+              {items.map((item) => {
+                const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href + "/"))
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    title={collapsed ? item.name : undefined}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                      isActive
+                        ? "bg-white/20 text-white"
+                        : "text-blue-100 hover:bg-white/10 hover:text-white"
+                    )}
+                  >
+                    <item.icon className={cn("shrink-0", collapsed ? "w-5 h-5 mx-auto" : "w-4 h-4")} />
+                    {!collapsed && <span>{item.name}</span>}
+                  </Link>
+                )
+              })}
+            </div>
           )
         })}
       </nav>

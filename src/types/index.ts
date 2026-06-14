@@ -141,6 +141,75 @@ export interface FormCampagne {
   seuil_alerte_pct: number
 }
 
+// ─── Sanctions & Procédures ───────────────────────────────────────────────────
+
+export type TypeSanction = 'avertissement' | 'suspension_temporaire' | 'amende' | 'retrait_agrement'
+export type StatutSanction = 'prononcee' | 'notifiee' | 'executee' | 'annulee'
+export type StatutMiseEnDemeure = 'envoyee' | 'reponse_recue' | 'sans_suite'
+export type TypeInfractionSignalement = 'desequilibre' | 'contenu_partisan' | 'temps_non_declare' | 'autre'
+
+export interface MiseEnDemeure {
+  id: string
+  alerte_id: string
+  media_id: string
+  campagne_id: string
+  motif: string
+  contenu: string
+  date_envoi: string
+  delai_reponse: number
+  statut: StatutMiseEnDemeure
+  creee_par: string | null
+  created_at: string
+  media?: Media
+  campagne?: Campagne
+  alerte?: Alerte
+}
+
+export interface Sanction {
+  id: string
+  mise_en_demeure_id: string | null
+  media_id: string
+  campagne_id: string
+  type_sanction: TypeSanction
+  montant_fcfa: number | null
+  duree_jours: number | null
+  motif: string
+  decision_numero: string | null
+  date_decision: string
+  date_effet: string
+  statut: StatutSanction
+  prononcee_par: string | null
+  created_at: string
+  media?: Media
+  campagne?: Campagne
+}
+
+export interface Signalement {
+  id: string
+  campagne_id: string | null
+  media_id: string | null
+  nom_signalant: string | null
+  email_signalant: string | null
+  telephone: string | null
+  description: string
+  type_infraction: TypeInfractionSignalement
+  statut: 'recu' | 'en_examen' | 'traite' | 'classe'
+  created_at: string
+  media?: Media
+  campagne?: Campagne
+}
+
+export interface ContactCNRA {
+  id: string
+  nom: string
+  email: string
+  telephone: string | null
+  role: 'directeur' | 'chef_service' | 'agent' | 'observateur_externe'
+  actif: boolean
+  notif_alertes: boolean
+  notif_rapports: boolean
+}
+
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
 export interface DashboardStats {
