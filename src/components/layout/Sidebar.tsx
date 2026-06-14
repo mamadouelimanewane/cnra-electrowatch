@@ -18,14 +18,18 @@ import {
   Gavel,
   MessageSquare,
   Shield,
+  Zap,
+  Sparkles,
 } from "lucide-react"
 import { useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 
 const navigation = [
-  { name: "Tableau de bord",   href: "/dashboard",      icon: LayoutDashboard, group: "principal" },
-  { name: "Vue Directeur",     href: "/directeur",      icon: Shield,          group: "principal" },
+  { name: "Tableau de bord",   href: "/dashboard",        icon: LayoutDashboard, group: "principal" },
+  { name: "Vue Directeur",     href: "/directeur",        icon: Shield,          group: "principal" },
+  { name: "Salle de Crise",    href: "/salle-de-crise",   icon: Zap,             group: "principal" },
+  { name: "IA Assistant",      href: "/ia-assistant",     icon: Sparkles,        group: "principal" },
   { name: "Campagnes",         href: "/campagnes",      icon: Vote,            group: "monitoring" },
   { name: "Interventions",     href: "/interventions",  icon: Mic2,            group: "monitoring" },
   { name: "Partis politiques", href: "/partis",         icon: Users,           group: "monitoring" },
