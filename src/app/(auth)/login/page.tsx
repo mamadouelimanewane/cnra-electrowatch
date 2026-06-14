@@ -25,8 +25,7 @@ export default function LoginPage() {
       setError("Identifiants invalides. Veuillez vérifier votre email et mot de passe.")
       setLoading(false)
     } else {
-      router.push("/dashboard")
-      router.refresh()
+      window.location.href = "/dashboard"
     }
   }
 
