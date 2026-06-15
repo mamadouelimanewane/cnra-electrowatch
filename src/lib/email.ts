@@ -1,6 +1,10 @@
 import { Resend } from "resend"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+const getResend = () => {
+  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY ?? "re_placeholder")
+  return _resend
+}
 
 const FROM = "CNRA ElectroWatch <noreply@cnra.sn>"
 
@@ -14,7 +18,7 @@ export async function envoyerAlerteDesequilibre(opts: {
   const niveau = opts.ecartPct >= 40 ? "CRITIQUE" : "AVERTISSEMENT"
   const couleur = opts.ecartPct >= 40 ? "#dc2626" : "#d97706"
 
-  return resend.emails.send({
+  return getResend().emails.send({
     from: FROM,
     to: opts.destinataires,
     subject: `[${niveau}] Déséquilibre détecté — ${opts.medianom} / ${opts.campagneNom}`,
@@ -78,7 +82,7 @@ export async function envoyerRapportHebdomadaire(opts: {
 }) {
   const scoreColor = opts.scoreEquite >= 80 ? "#166534" : opts.scoreEquite >= 60 ? "#d97706" : "#dc2626"
 
-  return resend.emails.send({
+  return getResend().emails.send({
     from: FROM,
     to: opts.destinataires,
     subject: `Rapport hebdomadaire ElectroWatch — ${opts.campagneNom} (${opts.periode})`,
